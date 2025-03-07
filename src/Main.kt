@@ -28,11 +28,15 @@ fun main() {
  * Defines the UI and responds to events
  * The app model should be passwd as an argument
  */
-class MainWindow : JFrame(), ActionListener {
+class MainWindow : JFrame(), ActionListener, KeyListener {
 
     // Fields to hold the UI elements
     private lateinit var greetingLabel: JLabel
     private lateinit var helloButton: JButton
+    private lateinit var goodbyeButton: JButton
+    private lateinit var helloJTextField: JTextField
+
+
 
     /**
      * Configure the UI and display it
@@ -64,20 +68,47 @@ class MainWindow : JFrame(), ActionListener {
     private fun addControls() {
         val defaultFont = Font(Font.SANS_SERIF, Font.PLAIN, 36)
 
-        greetingLabel = JLabel("Hello, World!")
+        greetingLabel = JLabel("Hello, $name")
         greetingLabel.horizontalAlignment = SwingConstants.CENTER
-        greetingLabel.bounds = Rectangle(50, 50, 500, 100)
+        greetingLabel.bounds = Rectangle(200, 0, 300, 100)
         greetingLabel.font = defaultFont
         add(greetingLabel)
 
+        pack()
 
-        helloButton = JButton("Click Me!")
-        helloButton.bounds = Rectangle(50,200,500,100)
+        helloButton = JButton("Hello!")
+        helloButton.bounds = Rectangle(50,200,150,150)
         helloButton.foreground = Color.YELLOW
         helloButton.background = Color(0,33,66)
         helloButton.font = defaultFont
         helloButton.addActionListener(this)     // Handle any clicks
         add(helloButton)
+
+        pack()
+
+        goodbyeButton = JButton("goodbye!")
+        goodbyeButton.bounds = Rectangle(380,200,150,150)
+        goodbyeButton.foreground = Color.YELLOW
+        goodbyeButton.background = Color(0,36,68)
+        goodbyeButton.font = defaultFont
+        goodbyeButton.addActionListener(this)     // Handle any clicks
+        add(goodbyeButton)
+
+        pack()
+
+        helloJTextField= JTextField(" ")
+        helloJTextField.bounds = Rectangle(200,100,200,100)
+        helloJTextField.foreground = Color.YELLOW
+        helloJTextField.background = Color(0,21,54)
+        helloJTextField.font = defaultFont
+        helloJTextField.addActionListener(this)
+        helloJTextField.addKeyListener(this)
+        add(helloJTextField)
+
+        pack()
+
+
+
     }
 
 
@@ -86,11 +117,50 @@ class MainWindow : JFrame(), ActionListener {
      */
     override fun actionPerformed(e: ActionEvent?) {
         when (e?.source) {
-            helloButton -> {
-                greetingLabel.text = "You clicked the button!"
+            helloJTextField -> {
+                println("name text changed!")
             }
+            helloButton -> {
+                println("Hello button pressed")
+                var name = "stranger"
+                if (helloJTextField.text.isNotBlank())  name = helloJTextField.text
+                    name = helloJTextField.text
+                    greetingLabel.text = "Hello there, $name!"
+                    greetingLabel.foreground = Color.GREEN
+                }
+                goodbyeButton -> {
+                    var name = "stranger"
+                    if (helloJTextField.text.isNotBlank()) name = helloJTextField.text
+                        name = helloJTextField.text
+                        greetingLabel.text = "goodbye, $name!"
+                        greetingLabel.foreground = Color.RED
+                    }
+
+
+                }
+                greetingLabel.text = "hello there!, ${helloJTextField.text}!"
+
+            }
+
+    override fun keyTyped(e: KeyEvent?) {
+        println("key TYPED: ${e?.keyChar}")
+
+
+    }
+    override fun keyPressed(e: KeyEvent?) {
+        println("key PRESSED: ${e?.keyCode}")
+        if (e?.keyCode in KeyEvent.VK_A .. KeyEvent.VK_Z ) {
+            println("letter key:")
+        } else {
+            e?.consume()
         }
     }
 
+    override fun keyReleased(e: KeyEvent?) {
+        println("key RELEASED: ${e?.keyCode}")    }
 }
+
+
+
+
 
